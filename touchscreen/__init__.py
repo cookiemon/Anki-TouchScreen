@@ -333,13 +333,21 @@ function update_pen_settings(){
     ts_redraw()
 }
 
+function start_line(x, y) {
+    arrays_of_points.push([{ x, y }]);
+    update_pen_settings();
+    ts_undo_button.className = 'active';
+}
+
+function next_line_point(x, y) {
+    arrays_of_points[arrays_of_points.length-1].push({ x, y });
+    ts_redraw();
+}
+
 canvas.addEventListener("mousedown",function (e) {
     isMouseDown = true;
-    event.preventDefault();
-    arrays_of_points.push(new Array());
-    arrays_of_points[arrays_of_points.length-1].push({ x: e.offsetX, y: e.offsetY });
-    update_pen_settings()
-    ts_undo_button.className = "active"
+    e.preventDefault();
+    start_line(e.offsetX, e.offsetY);
 });
 
 function ts_undo(){
@@ -350,7 +358,7 @@ function ts_undo(){
     }
     ts_redraw()
 }
- 
+
 window.addEventListener("mouseup",function (e) {
     isMouseDown = false;
 });
@@ -375,11 +383,10 @@ function ts_redraw()
     }
 
 }
- 
+
 canvas.addEventListener("mousemove",function (e) {
     if (isMouseDown && active) {
-        arrays_of_points[arrays_of_points.length-1].push({ x: e.offsetX, y: e.offsetY });
-        ts_redraw()
+        next_line_point(e.offsetX, e.offsetY);
     }
 });
 
@@ -401,7 +408,7 @@ def custom(*args, **kwargs):
         return default
     output = (
         default +
-        ts_blackboard + 
+        ts_blackboard +
         "<script>color = '" + ts_color + "'</script>" +
         "<script>line_width = '" + str(ts_line_width) + "'</script>"
     )
