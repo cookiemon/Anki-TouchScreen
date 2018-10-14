@@ -245,7 +245,7 @@ ts_blackboard = u"""
 }
 #canvas_wrapper
 {
-    height: 100px
+    height: 100
 }
 </style>
 
@@ -266,11 +266,11 @@ function switch_visibility()
 {
     if (visible)
     {
-        canvas.style.display='none';
+        wrapper.style.display='none';
     }
     else
     {
-        canvas.style.display='block';
+        wrapper.style.display='block';
     }
     visible = !visible;
 }
