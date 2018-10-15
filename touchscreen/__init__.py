@@ -325,6 +325,7 @@ var isMouseDown = false;
 var mouseX = 0;
 var mouseY = 0;
 var active = true;
+var fast_update = true;
 
 function update_pen_settings(){
     ctx.lineJoin = ctx.lineCap = 'round';
@@ -344,7 +345,8 @@ function next_line_point(x, y) {
     ts_redraw();
 }
 
-canvas.addEventListener("mousedown",function (e) {
+canvas.addEventListener("pointerdown",function (e) {
+    if (!e.isPrimary) { return; }
     isMouseDown = true;
     e.preventDefault();
     start_line(e.offsetX, e.offsetY);
@@ -359,18 +361,18 @@ function ts_undo(){
     ts_redraw()
 }
 
-window.addEventListener("mouseup",function (e) {
+window.addEventListener("pointerup",function (e) {
+    if (!e.isPrimary) { return; }
     isMouseDown = false;
 });
-
 
 function ts_redraw()
 {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    ctx.beginPath();
     for (var path = 0; path < arrays_of_points.length; path++) {
         var p1 = arrays_of_points[path][0];
         var p2 = arrays_of_points[path][1];
-        ctx.beginPath();
         ctx.moveTo(p1.x, p1.y);
         for (var i = 1, len = arrays_of_points[path].length; i < len; i++) {
             var midPoint = midPointBtw(p1, p2);
@@ -379,12 +381,13 @@ function ts_redraw()
             p2 = arrays_of_points[path][i+1];
         }
         ctx.lineTo(p1.x, p1.y);
-        ctx.stroke();
     }
+    ctx.stroke();
 
 }
 
-canvas.addEventListener("mousemove",function (e) {
+canvas.addEventListener("pointermove",function (e) {
+    if (!e.isPrimary) { return; }
     if (isMouseDown && active) {
         next_line_point(e.offsetX, e.offsetY);
     }
