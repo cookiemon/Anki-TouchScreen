@@ -342,7 +342,18 @@ function start_line(x, y) {
 
 function next_line_point(x, y) {
     arrays_of_points[arrays_of_points.length-1].push({ x, y });
-    ts_redraw();
+
+    // The current part is drawn as line segment because
+    // it is faster than drawing the cubic curve part and
+    // latency is bad enough. The real line is redrawn
+    // as smooth curve when the timeout hits.
+    var l0 = arrays_of_points[arrays_of_points.length-1];
+    var p0 = l0[l0.length-2];
+    var p1 = l0[l0.length-1];
+    ctx.beginPath();
+    ctx.moveTo(p0.x, p0.y);
+    ctx.lineTo(p1.x, p1.y);
+    ctx.stroke();
 }
 
 canvas.addEventListener("pointerdown",function (e) {
