@@ -182,7 +182,12 @@ def ts_onload():
 
 ts_blackboard = u"""
 <div id="canvas_wrapper">
-    <canvas id="main_canvas" width="100" height="100"></canvas>
+    <!--
+    canvas needs touch-action: none so that it doesn't fire bogus
+    pointercancel events. See:
+    https://stackoverflow.com/questions/59010779/pointer-event-issue-pointercancel-with-pressure-input-pen
+    -->
+    <canvas id="main_canvas" width="100" height="100" style="touch-action: none"></canvas>
 </div>
 <div id="pencil_button_bar">
     <input type="button" class="active" onclick="active=!active;switch_visibility();switch_class(this, 'active');" value="\u270D" title="Toggle visiblity">
